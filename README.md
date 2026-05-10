@@ -40,6 +40,7 @@ Create a `.env` file in the project root:
 | `DUCKDNS_TOKEN` | DuckDNS update token (optional, for DynDNS) |
 | `WEBHOOK_SECRET` | Shared secret for webhook auth (optional) |
 | `SERVICES_YAML` | Path to services YAML (default: `services.yaml`) |
+| `DOCKER_HOST` | Docker daemon URL (default: `tcp://localhost:2375`) |
 
 ### Services YAML (`services.yaml`)
 
@@ -83,9 +84,59 @@ Relative volume paths are resolved to absolute paths automatically.
 
 ## Usage
 
+### Local
+
 ```
 python bot.py
 ```
+
+### Docker
+
+Build:
+
+```
+docker build -t bot .
+```
+
+Run:
+
+```
+docker run -d \
+  --name bot \
+  --restart unless-stopped \
+  --network host \
+  -v .env:/app/.env \
+  bot
+```
+
+Volumes:
+- `.env` — bot configuration (token, chat ID, etc.)
+
+The bot connects to Docker via TCP at `DOCKER_HOST` (default `tcp://localhost:2375`). Using `--network host` ensures `localhost` inside the container resolves to the host machine.
+
+### Docker TCP Setup
+
+By default the Docker daemon only listens on a Unix socket (`/var/run/docker.sock`). Since the bot runs inside a container without the socket mounted, Docker must also listen on TCP.
+
+Run `setup-docker.sh` to configure this:
+
+```
+sudo ./setup-docker.sh
+```
+
+The script detects whether Docker uses **systemd socket activation** or a plain daemon.json config, then applies the correct method:
+
+- **systemd mode** — creates an override at `/etc/systemd/system/docker.service.d/override.conf` that adds `-H tcp://127.0.0.1:2375` to the dockerd command
+- **daemon.json mode** — adds a `hosts` entry with both the Unix socket and TCP address
+
+After running the script, Docker will listen on `tcp://127.0.0.1:2375` in addition to the default Unix socket.
+
+**Security benefits of this approach over mounting `/var/run/docker.sock`:**
+
+- **No filesystem exposure** — Mounting the Docker socket into a container grants that container full access to the host's Docker API. If the bot is compromised, an attacker cannot use the socket to escalate privileges or access other host resources.
+- **Loopback-only binding** — The daemon listens on `127.0.0.1:2375`, so the TCP port is only reachable from the host itself (not from the network). Combined with `--network host`, only co-located containers can connect.
+- **Non-root container** — The bot runs as an unprivileged `app` user. Even with Docker API access, the attacker must first escape the container's user context.
+- **Explicit connection** — The bot connects to a known TCP address rather than depending on file permissions of a shared socket. This makes the access boundary clear and auditable.
 
 The bot presents an inline keyboard:
 

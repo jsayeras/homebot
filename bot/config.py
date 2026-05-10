@@ -11,3 +11,4 @@ class Config:
     DUCKDNS_DOMAIN = "saydu"
     WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET", "")
     SERVICES_YAML = os.getenv("SERVICES_YAML", "services.yaml")
+    DOCKER_HOST = os.getenv("DOCKER_HOST", "tcp://localhost:2375")

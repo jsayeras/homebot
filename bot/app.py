@@ -20,7 +20,7 @@ class BotApp:
         self.seen_chats: set[int] = set()
         self.tunnel_service = TunnelService()
         self.opencode_service = OpenCodeService()
-        self.docker_service = DockerService(self.config.SERVICES_YAML)
+        self.docker_service = DockerService(self.config.SERVICES_YAML, self.config.DOCKER_HOST)
 
     def _make_keyboard(self) -> InlineKeyboardMarkup:
         keyboard = [

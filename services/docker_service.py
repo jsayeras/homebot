@@ -7,10 +7,10 @@ import yaml
 
 class DockerService:
 
-    def __init__(self, yaml_path: str = "services.yaml") -> None:
+    def __init__(self, yaml_path: str = "services.yaml", docker_host: str = "tcp://localhost:2375") -> None:
         self._yaml_path = yaml_path
         self._services: Dict[str, Dict[str, str]] = {}
-        self._client = docker.from_env()
+        self._client = docker.DockerClient(base_url=docker_host)
 
     def load(self) -> Dict[str, Dict[str, str]]:
         with open(self._yaml_path) as f:

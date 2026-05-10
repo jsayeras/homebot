@@ -17,4 +17,6 @@ dependencies = [
     "openhands>=1.16.0",
     "fastapi>=0.115.0",
     "uvicorn>=0.34.0",
+    "docker>=7.0",
+    "pyyaml>=6.0",
 ]
