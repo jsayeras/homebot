@@ -116,13 +116,13 @@ docker run -d \
   --name bot \
   --restart unless-stopped \
   --network host \
-  --secret id=env,src=.env,target=/app/.env \
+  --env-file .env \
   -e DOCKER_HOST=tcp://localhost:2375 \
   bot
 ```
 
-Secrets:
-- `.env` — bot configuration (token, chat ID, etc.) passed as a Docker secret
+Environment:
+- `.env` — bot configuration (token, chat ID, etc.) loaded via `--env-file`
 
 The bot connects to Docker via TCP at `DOCKER_HOST` (default `tcp://localhost:2375`). Using `--network host` ensures `localhost` inside the container resolves to the host machine.
 
