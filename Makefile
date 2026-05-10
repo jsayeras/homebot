@@ -11,11 +11,11 @@ build:
 	docker build -t $(FULL_IMAGE) .
 
 run:
-	docker run --rm \
+	docker run  \
 		--name bot \
 		--network host \
 		-e DOCKER_HOST=$(DOCKER_HOST) \
-		-v .env:/app/.env \
+		--env-file .env  \
 		$(FULL_IMAGE)
 
 publish:

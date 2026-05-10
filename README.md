@@ -105,12 +105,12 @@ docker run -d \
   --name bot \
   --restart unless-stopped \
   --network host \
-  -v .env:/app/.env \
+  --secret id=env,src=.env,target=/app/.env \
   bot
 ```
 
-Volumes:
-- `.env` — bot configuration (token, chat ID, etc.)
+Secrets:
+- `.env` — bot configuration (token, chat ID, etc.) passed as a Docker secret
 
 The bot connects to Docker via TCP at `DOCKER_HOST` (default `tcp://localhost:2375`). Using `--network host` ensures `localhost` inside the container resolves to the host machine.
 
@@ -172,6 +172,8 @@ Starts the opencode web UI on a random available port, bound to `0.0.0.0`. Shows
 Shows current public IP, DuckDNS resolution, and all active tunnel URLs.
 
 ### Webhook
+
+> **WIP** — This feature is a work in progress.
 
 A FastAPI server runs on port 3000. POST to `/webhook?token=<secret>` (or with `Authorization: Bearer <secret>`) to forward arbitrary JSON data to the authorized Telegram chat.
 
