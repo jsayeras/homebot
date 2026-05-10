@@ -92,6 +92,17 @@ python bot.py
 
 ### Docker
 
+#### Using Makefile
+
+```
+make build          # build the image
+make run            # run the container (add DOCKER_HOST=... if needed)
+make publish        # push to a registry (set REGISTRY=...)
+make sign           # cosign the image
+```
+
+#### Or directly with docker
+
 Build:
 
 ```
@@ -106,6 +117,7 @@ docker run -d \
   --restart unless-stopped \
   --network host \
   --secret id=env,src=.env,target=/app/.env \
+  -e DOCKER_HOST=tcp://localhost:2375 \
   bot
 ```
 
