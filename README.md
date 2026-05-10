@@ -18,6 +18,7 @@ A Telegram bot that manages Docker containers, Cloudflare tunnels, and services 
 | Docker | Container management (via docker-py SDK) |
 | [cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/) | Ephemeral tunnels (`cloudflared tunnel --url`) |
 | [opencode](https://opencode.ai) CLI | Web UI server (optional, for the OpenCode feature) |
+| [cosign](https://docs.sigstore.dev) | Image signing and verification (optional, for supply chain security) |
 
 Python packages (see `pyproject.toml`):
 - `python-telegram-bot` — Telegram bot framework
@@ -149,6 +150,26 @@ After running the script, Docker will listen on `tcp://127.0.0.1:2375` in additi
 - **Loopback-only binding** — The daemon listens on `127.0.0.1:2375`, so the TCP port is only reachable from the host itself (not from the network). Combined with `--network host`, only co-located containers can connect.
 - **Non-root container** — The bot runs as an unprivileged `app` user. Even with Docker API access, the attacker must first escape the container's user context.
 - **Explicit connection** — The bot connects to a known TCP address rather than depending on file permissions of a shared socket. This makes the access boundary clear and auditable.
+
+### Image Signing & Verification
+
+The image can be signed with [cosign](https://docs.sigstore.dev) for supply chain security:
+
+```
+# Sign (pushes then signs by digest)
+make sign
+
+# Verify a signature
+make verify
+```
+
+Signing requires prior login:
+
+```
+make login    # requires GITHUB_TOKEN env var
+```
+
+Verification checks the signature against the image digest in the registry. Install cosign from the [Sigstore docs](https://docs.sigstore.dev/system_config/installation/).
 
 The bot presents an inline keyboard:
 

@@ -29,4 +29,4 @@ RUN chown -R app:app /app
 
 USER app
 
-CMD [".venv/bin/python", "bot.py"]
+CMD ["uv", "run", "bot.py"]
