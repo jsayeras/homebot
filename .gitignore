@@ -1,0 +1,26 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Downloaded reports
+bbva-reports/
+
+# Environment files
+.env
+.env.*
+
+# Secrets and credentials
+credentials.json
+credential*.json
+client_secret*.json
+clientsecret*.json
+*.pem
+*.key
+secrets/

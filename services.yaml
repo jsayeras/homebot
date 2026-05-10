@@ -1,0 +1,10 @@
+services:
+  nginx-test:
+    command: "-d --rm -p 8080:80 nginx:alpine"
+    tunnel: ""
+  mealie:
+    command: "-d --name mealie -p 9925:9000 -v ./mealie-data:/app/data -e ALLOW_SIGNUP=true -e PUID=1000 -e PGID=1000 -e TZ=Europe/Madrid --restart unless-stopped ghcr.io/mealie-recipes/mealie:latest"
+    tunnel: "localhost:9925"
+  busybox-echo:
+    command: "--rm busybox echo hello from docker"
+    tunnel: ""

@@ -1,0 +1,9 @@
+fs:
+  deny:
+    - ".env"
+    - ".env.*"
+    - ".credentials"
+    - ".credentials.json"
+    - "**/.env"
+    - "**/.credentials*"
+    - "**/secrets/**"
