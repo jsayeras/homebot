@@ -22,6 +22,7 @@ run:
 		--name $(IMAGE) \
 		--network host \
 		-e DOCKER_HOST=$(DOCKER_HOST) \
+		--mount type=bind,source=./services.yaml,target=/app/services.yaml \
 		--env-file .env \
 		$(GHCR_IMAGE)
 
